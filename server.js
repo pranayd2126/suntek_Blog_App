@@ -20,6 +20,7 @@ app.use('/users-api', userRoute)
 app.use('/authors-api', authorRoute)
 app.use('/admins-api', adminRoute)
 
+
 const connectDB= async ()=>{
     try{
         await mongoose.connect(`${process.env.DB_URL}`);
@@ -36,7 +37,14 @@ const connectDB= async ()=>{
 }
 connectDB();
 
+app.post('/logout',(req,res)=>{
+    res.clearCookie('token',{
+        httpOnly: true, // must martch tr setting 
+        secure:false,
+        sameSite:'lax'
 
+    })
+})
 
 //error handling midddle ware
 
