@@ -43,6 +43,11 @@ export const authenticate =async ({email,password})=>{
         err.status=401;
         throw err;
     }
+     if(user.isActive==false){
+        const err=new Error("user is blocked, contact admin");
+        err.status=403;
+        throw err;
+     }
     //genrate token
     const token=jwt.sign({userId:user._id,role:user.role,email:user.email},process.env.JWT_SECRET,{expiresIn:"1h"});
     const userObj=user.toObject();
