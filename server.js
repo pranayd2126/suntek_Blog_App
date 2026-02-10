@@ -6,6 +6,7 @@ import {userRoute} from './APIs/UserApi.js'
 import {authorRoute} from './APIs/AuthorApi.js'
 import {adminRoute} from './APIs/AdminApi.js'
 import cookieParser from "cookie-parser";
+import { commonRoute } from "./APIs/CommonAPI.js";
 
 config();
 
@@ -14,11 +15,14 @@ const app=exp();
 app.use(exp.json())
 app.use(cookieParser())
 
-
+//mount routes
 
 app.use('/users-api', userRoute)
 app.use('/authors-api', authorRoute)
 app.use('/admins-api', adminRoute)
+app.use('/common-api', commonRoute)
+
+//connect to db and start the server
 
 
 const connectDB= async ()=>{
@@ -36,14 +40,10 @@ const connectDB= async ()=>{
 
 }
 connectDB();
-
-app.post('/logout',(req,res)=>{
-    res.clearCookie('token',{
-        httpOnly: true, // must martch tr setting 
-        secure:false,
-        sameSite:'lax'
-
-    })
+//handle 404 
+//route not found
+app.use((req,res,next)=>{
+    res.json({message:`${req.url} route not found`})
 })
 
 //error handling midddle ware

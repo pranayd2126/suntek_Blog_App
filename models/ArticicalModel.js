@@ -25,6 +25,7 @@ const articleSchema = new Schema(
       required: [true, "category is required"],
     },
     content: {
+    
       type: String,
       required: [true, "content is required"],
     },

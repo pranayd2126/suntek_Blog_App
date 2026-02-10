@@ -19,21 +19,7 @@ authorRoute.post("/users",async(req,res)=>{
     
 
 })
-//authenticate author (public route)
-authorRoute.post("/authenticate",async(req,res)=>{
-    //get user creddentials from req body
-     let userCred=req.body;
-    // authenticate users
-    let {token ,user}= await authenticate(userCred)
-    ;
-    //save the token n httponly
-    res.cookie("token",token,{
-        httpOnly:true,
-        sameSite:'lax',
-        secure:false
-    })
-    res.status(200).json({message:"user authenticated successfully",payload:{user}})
-})
+
 //create article by author (protected route)
 authorRoute.post('/articles' ,verifyToken, checkAuthor, async(req,res)=>{
     //get article data from req body
@@ -82,7 +68,6 @@ authorRoute.get('/articles/:authorId',verifyToken, checkAuthor, async(req,res)=>
 
 });
 //edit articical(protected route)
-
 authorRoute.put('/articles',verifyToken, checkAuthor, async(req,res)=>{
  //   get mdefied data from body
  const { title, content, articleId, author,category } = req.body;
@@ -118,3 +103,4 @@ authorRoute.delete('/articles/:articleId',verifyToken, checkAuthor, async(req,re
     res.status(200).json({message:"article deleted successfully",payload:deleted})
 })
 
+//undo the soft deleted articical(protected route)

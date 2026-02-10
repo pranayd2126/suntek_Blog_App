@@ -19,23 +19,8 @@ userRoute.post("/users",async(req,res)=>{
 
 })
 
-//authenticate user
-userRoute.post("/authenticate",async(req,res)=>{
-    //get user creddentials from req body
-     let userCred=req.body;
-    // authenticate users
-    let {token ,user}= await authenticate(userCred)
-    
-    //save the token n httponly
-    res.cookie("token",token,{
-        httpOnly:true,
-        sameSite:'lax',
-        secure:false
-    })
-    res.status(200).json({message:"user authenticated successfully",payload:{user}})
-})
-
 //read all active articical
+
 userRoute.get("/users/articles", verifyToken, async (req, res) => {
 
 
@@ -45,46 +30,23 @@ userRoute.get("/users/articles", verifyToken, async (req, res) => {
 
 
 });
+
 //comment on articical
 
- userRoute.post("/users/comments", verifyToken, async (req, res) => {
-//     //get articaleid froms parama
-    
-//     let{  articleId,userId,comment} = req.body;
-//     //check the role of the userd
-//     let article= await ArticleModel.findById(articleId)
+ userRoute.post("/comments", verifyToken, async (req, res) => {
+  //get article id,comment and user from req body
+   const {articleId,comment,user}=req.body;
+//check if article exist or not
 
-//     if(!article){
-//         res.status(404).send({message:"article nor found "})
-//     }
-//     await ArticleModel.findByIdAndUpdate(articleId, {$push:{"comment":{comment}}},{new:true})
-//     res.status(200).send({message:"comment added successfully"})
-     
-    
-//     //verrfriy aritials existes 
-//     //
-      const { articleId, comment } = req.body;
-
-      // user id from token (set inside verifyToken)
-      const userId = req.user.id;
-
-      // check article exists
-      const article = await ArticleModel.findById(articleId);
-      if (!article) {
-        return res.status(404).json({ message: "Article not found" });
-      }
-
-      // add comment
-      await ArticleModel.findByIdAndUpdate(articleId, {
-        $push: {
-          comments: {
-            userId,
-            comment,
-          },
-        },
-      });
-
-      res.status(200).json({ message: "Comment added successfully" });
-
+   let article= await ArticleModel.findById(articleId);
+//if article not exist send 404
+   if(!article){
+    return res.status(404).json({message:"article not found"})
+   }
+   //update the article by pushing the comment in comments
+   let updated=await ArticleModel.findByIdAndUpdate(articleId,{$push:{comments:{comment,user}}},{new:true})
+//send response
+   res.status(200).json({message:"comment added successfully",payload:updated})
+// 
 });
 

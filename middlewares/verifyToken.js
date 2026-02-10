@@ -6,7 +6,7 @@ export const verifyToken=(req,res,next)=>{
     if(token===undefined){
         return res.status(400).json({message:"token not found plz login"})
     }
-    let decoded=jwt.verify(token,process.env.SECRET_KEY);
+    let decoded=jwt.verify(token,process.env.JWT_SECRET);
     next();
 
     //verify the validity of token (decding the toekn)
