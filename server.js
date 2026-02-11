@@ -1,7 +1,6 @@
 import exp from "express"
 import {config} from 'dotenv'
 import mongoose from 'mongoose';
-
 import {userRoute} from './APIs/UserApi.js'
 import {authorRoute} from './APIs/AuthorApi.js'
 import {adminRoute} from './APIs/AdminApi.js'
